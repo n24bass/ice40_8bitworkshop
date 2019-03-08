@@ -19,7 +19,7 @@ The default pins used by the example are:
 | G16 | 3 | BLUE | |
 | H16 |  | | RESET |
 
-Don't forget the 270ohm resistors in-line with the RGB pins. RESET is used in few projects.
+Don't forget the 270ohm resistors in-line with the RGB pins. RESET (used in few projects) is active low.
 
 ## Project
 
