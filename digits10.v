@@ -213,8 +213,8 @@ module test_numbers_top(
 
    wire 		       display_on;
    wire 		       vsync, hsync;
-   wire signed [11:0] 	       hpos;
-   wire signed [11:0] 	       vpos;
+   wire [10:0] 	       hpos;
+   wire [10:0] 	       vpos;
    
    VGASyncGen
      // 640x480@73Hz
@@ -238,9 +238,9 @@ module test_numbers_top(
 	      .activevideo(display_on),
 	      .px_clk(clk));
    
-   wire [3:0] 		       digit = hpos[7:4];
-   wire [2:0] 		       xofs = hpos[3:1];
-   wire [2:0] 		       yofs = vpos[3:1];
+   wire [3:0] 		       digit = hpos[6:3] - 3;
+   wire [2:0] 		       xofs = hpos[2:0];
+   wire [2:0] 		       yofs = vpos[2:0];
    wire [7:0] 		       bits;
    
    digits10_array numbers(

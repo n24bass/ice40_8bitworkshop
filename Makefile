@@ -15,8 +15,11 @@
 # PROJ = digits10
 # TOP = test_numbers_top
 # 
-PROJ = scoreboard
-TOP = scoreboard_top
+# PROJ = scoreboard
+# TOP = scoreboard_top
+#
+PROJ = chardisplay
+TOP = test_ram1_top
 #
 # PROJ = ball_paddle
 # TOP = ball_paddle_top

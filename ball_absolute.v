@@ -55,8 +55,8 @@ module top (
    wire green = VGA_GREEN;
    wire blue  = VGA_BLUE;
    wire pclk;
-   reg signed [11:0] hpos;
-   reg signed [11:0] vpos;
+   reg [10:0] hpos;
+   reg [10:0] vpos;
    wire display_on;
    wire vsync, hsync;
 
@@ -114,12 +114,12 @@ module top (
    localparam ball_vert_initial = VGA_VSIZE / 2;
 
    // ball position
-   reg signed [11:0] 	   ball_hpos = ball_horiz_initial;
-   reg signed [11:0] 	   ball_vpos = ball_vert_initial;
+   reg [10:0] 	   ball_hpos = ball_horiz_initial;
+   reg [10:0] 	   ball_vpos = ball_vert_initial;
 
    // ball velocity vector
-   reg signed [11:0] 	   ball_horiz_move = BALL_SPEED;
-   reg signed [11:0] 	   ball_vert_move  = BALL_SPEED;
+   reg [10:0] 	   ball_horiz_move = BALL_SPEED;
+   reg [10:0] 	   ball_vert_move  = BALL_SPEED;
 
    wire	   ball_hgfx = ((hpos - ball_hpos) < BALL_SIZE) && ((hpos - ball_hpos) >= 0);
    wire    ball_vgfx = ((vpos - ball_vpos) < BALL_SIZE) && ((vpos - ball_vpos) >= 0);

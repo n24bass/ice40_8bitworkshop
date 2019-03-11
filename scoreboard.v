@@ -47,8 +47,8 @@ module scoreboard_generator(score0, score1, lives, vpos, hpos, board_gfx);
    input [3:0] score0;
    input [3:0] score1;
    input [3:0] lives;
-   input signed [11:0] vpos;
-   input signed [11:0] hpos;
+   input [10:0] vpos;
+   input [10:0] hpos;
    output 	       board_gfx;
 
    reg [3:0] 	       score_digit;
@@ -105,8 +105,8 @@ module scoreboard_top(
    wire blue  = VGA_BLUE;
    wire clk;
    wire display_on;
-   wire signed [11:0] 	     hpos;
-   wire signed [11:0] 	     vpos;
+   wire [10:0] 	     hpos;
+   wire [10:0] 	     vpos;
    
    wire 		     board_gfx;
 

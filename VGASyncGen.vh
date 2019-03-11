@@ -100,8 +100,8 @@ module VGASyncGen
     input wire 	      clk, // Input clock (12Mhz or 16Mhz)
     output wire       hsync, // Horizontal sync out
     output wire       vsync, // Vertical sync out
-    output reg signed [11:0] x_px, // X position for actual pixel.
-    output reg signed [11:0] y_px, // Y position for actual pixel.
+    output reg [10:0] x_px, // X position for actual pixel.
+    output reg [10:0] y_px, // Y position for actual pixel.
     output wire       activevideo, // Video is actived.
     //            output wire      endframe,      // End for actual frame.
     output wire       px_clk         // Pixel clock.
