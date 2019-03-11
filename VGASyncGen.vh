@@ -19,6 +19,10 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+
+`ifndef VGASYNCGEN_VH
+`define VGASYNCGEN_VH
+
 module VGASyncGen
   #(
     // 640x480@60Hz (pixel clock 25.175MHz) - OK
@@ -250,3 +254,5 @@ module VGASyncGen
      end
 
 endmodule
+
+`endif

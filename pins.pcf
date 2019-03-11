@@ -59,7 +59,7 @@ set_io --warn-no-port VGA_HSYNC D16
 set_io --warn-no-port VGA_VSYNC C16
 set_io --warn-no-port PCLK B16
 set_io --warn-no-port RST H16
-set_io --warn-no-port RSTOUT J16
+set_io --warn-no-port PDL J15
 
 # Right side of board
 #set_io --warn-no-port PIN_14 H9
