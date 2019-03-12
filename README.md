@@ -30,7 +30,7 @@ Don't forget the 270ohm resistors in-line with the RGB pins. RESET (used in few 
 * digits10
 * scoreboard
 * chardisplay 
-* .. in progress.
+* .. work in progress.
 
 ## Makefile
 

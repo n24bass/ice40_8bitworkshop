@@ -64,6 +64,7 @@ module scoreboard_generator(score0, score1, lives, vpos, hpos, board_gfx);
 	endcase
      end
    
+   // digits10_case numbers(
    digits10_array digits(
 			 .digit(score_digit),
 			 .yofs(vpos[4:2]),

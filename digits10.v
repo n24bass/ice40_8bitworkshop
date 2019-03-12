@@ -2,7 +2,6 @@
 `ifndef DIGITS10_H
  `define DIGITS10_H
 
-// `include "hvsync_generator.v"
  `include "VGASyncGen.vh"
 
 /*
@@ -14,9 +13,11 @@
  These two modules are functionally equivalent.
  */
 
+// `define _HEX_ 
+
 // module for 10-digit bitmap ROM
 module digits10_case(digit, yofs, bits);
-   
+
    input [3:0] digit;		// digit 0-9
    input [2:0] yofs;		// vertical offset (0-4)
    output reg [4:0] bits;	// output (5 bits)
@@ -86,6 +87,49 @@ module digits10_case(digit, yofs, bits);
        7'o113: bits = 5'b00001;
        7'o114: bits = 5'b11111;
 
+`ifdef _HEX_
+       // A
+       7'o120: bits = 5'b01110;
+       7'o121: bits = 5'b10001;
+       7'o122: bits = 5'b11111;
+       7'o123: bits = 5'b10001;
+       7'o124: bits = 5'b10001;
+
+       // B
+       7'o130: bits = 5'b11110;
+       7'o131: bits = 5'b10001;
+       7'o132: bits = 5'b11110;
+       7'o133: bits = 5'b10001;
+       7'o134: bits = 5'b11110;
+
+       // C
+       7'o140: bits = 5'b01111;
+       7'o141: bits = 5'b10000;
+       7'o142: bits = 5'b10000;
+       7'o143: bits = 5'b10000;
+       7'o144: bits = 5'b01111;
+
+       // D
+       7'o150: bits = 5'b11110;
+       7'o151: bits = 5'b10001;
+       7'o152: bits = 5'b10001;
+       7'o153: bits = 5'b10001;
+       7'o154: bits = 5'b11110;
+
+       // E
+       7'o160: bits = 5'b11111;
+       7'o161: bits = 5'b10000;
+       7'o162: bits = 5'b11110;
+       7'o163: bits = 5'b10000;
+       7'o164: bits = 5'b11111;
+
+       // F
+       7'o170: bits = 5'b11111;
+       7'o171: bits = 5'b10000;
+       7'o172: bits = 5'b11110;
+       7'o173: bits = 5'b10000;
+       7'o174: bits = 5'b10000;
+`endif
        default: bits = 0;
      endcase
 endmodule
@@ -243,7 +287,8 @@ module test_numbers_top(
    wire [2:0] 		       yofs = vpos[2:0];
    wire [7:0] 		       bits;
    
-   digits10_array numbers(
+   // digits10_array numbers(
+   digits10_case numbers(
 			  .digit(digit),
 			  .yofs(yofs),
 			  .bits(bits)
