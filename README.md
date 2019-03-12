@@ -27,17 +27,36 @@ Don't forget the 270ohm resistors in-line with the RGB pins. RESET (used in few 
 * segment_decorder
 * bitmapped_digits
 * ball_absolute
+* digits10
+* scoreboard
+* chardisplay 
 * .. in progress.
 
 ## Makefile
 
-Select target prject in Makefile.
+Select PROJ and TOP for the target project in Makefile.
 
 ```
 # PROJ      = test_pattern
+# TOP = top
+#
 # PROJ      = segment_decoder
+# TOP = top
+#
 # PROJ      = bitmapped_digits
-PROJ = ball_absolute
+# TOP = top
+#
+# PROJ = ball_absolute
+# TOP = top
+#
+# PROJ = digits10
+# TOP = test_numbers_top
+# 
+# PROJ = scoreboard
+# TOP = scoreboard_top
+#
+PROJ = chardisplay
+TOP = test_ram1_top
 ```
 
 Make.

@@ -15,7 +15,7 @@ D - number of data bits (default = 8)
 
 module RAM_sync(clk, addr, din, dout, we);
   
-  parameter A = 10; // # of address bits
+  parameter A = 14; // # of address bits
   parameter D = 8;  // # of data bits
   
   input  clk;		// clock

@@ -70,7 +70,7 @@ module test_ram1_top(
 		   .activevideo(display_on),
 		   .px_clk(clk));
   
-  wire [9:0] ram_addr;
+  wire [13:0] ram_addr;
   wire [7:0] ram_read;
   reg [7:0] ram_write;
   reg ram_writeenable = 0;
@@ -94,15 +94,15 @@ module test_ram1_top(
   //   .vpos(vpos)
   // );
  
-   wire [4:0] row = vpos[9:5];	// [7:3] 5-bit row, vpos / 8
-   wire [4:0] col = hpos[9:5];	// [7:3] 5-bit column, hpos / 8
+   wire [6:0] row = vpos[9:3];	// 7-bit row, vpos / 8
+   wire [6:0] col = hpos[9:3];	// 7-bit column, hpos / 8
    wire [2:0] rom_yofs = vpos[2:0]; // scanline of cell
    wire [7:0] rom_bits;		   // 5 pixels per scanline
    
    wire [3:0] digit = ram_read[3:0]; // read digit from RAM
    wire [2:0] xofs = hpos[2:0];      // which pixel to draw (0-7)
   
-  assign ram_addr = {row,col};	// 10-bit RAM address
+  assign ram_addr = {row,col};	// 14-bit RAM address
 
   // digits ROM
   digits10_case numbers(
