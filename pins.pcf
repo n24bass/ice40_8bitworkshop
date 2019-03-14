@@ -34,62 +34,21 @@
 ###############################################################################
 
 ####
-# TinyFPGA BX information: https://github.com/tinyfpga/TinyFPGA-BX/
+# ICE40HX8K
+# CT256
 ####
-
-# Left side of board
-#set_io --warn-no-port PIN_1 A2
-#set_io --warn-no-port PIN_2 A1
-#set_io --warn-no-port PIN_3 B1
-#set_io --warn-no-port PIN_4 C2
-#set_io --warn-no-port PIN_5 C1
-#set_io --warn-no-port PIN_6 D2
-#set_io --warn-no-port PIN_7 D1
-#set_io --warn-no-port PIN_8 E2
-#set_io --warn-no-port PIN_9 E1
-#set_io --warn-no-port PIN_10 G2
-#set_io --warn-no-port PIN_11 H1
-#set_io --warn-no-port PIN_12 J1
-#set_io --warn-no-port PIN_13 H2
 
 set_io --warn-no-port VGA_BLUE G16
 set_io --warn-no-port VGA_GREEN F16
 set_io --warn-no-port VGA_RED E16
 set_io --warn-no-port VGA_HSYNC D16
 set_io --warn-no-port VGA_VSYNC C16
-set_io --warn-no-port PCLK B16
 set_io --warn-no-port RST H16
-set_io --warn-no-port PDL J15
 
-# Right side of board
-#set_io --warn-no-port PIN_14 H9
-#set_io --warn-no-port PIN_15 D9
-#set_io --warn-no-port PIN_16 D8
-#set_io --warn-no-port PIN_17 C9
-#set_io --warn-no-port PIN_18 A9
-#set_io --warn-no-port PIN_19 B8
-#set_io --warn-no-port PIN_20 A8
-#set_io --warn-no-port PIN_21 B7
-#set_io --warn-no-port PIN_22 A7
-#set_io --warn-no-port PIN_23 B6
-#set_io --warn-no-port PIN_24 A6
-
-# SPI flash interface on bottom of board
-#set_io --warn-no-port SPI_SS F7
-#set_io --warn-no-port SPI_SCK G7
-#set_io --warn-no-port SPI_IO0 G6
-#set_io --warn-no-port SPI_IO1 H7
-#set_io --warn-no-port SPI_IO2 H4
-#set_io --warn-no-port SPI_IO3 J8
-
-# General purpose pins on bottom of board
-#set_io --warn-no-port PIN_25 G1
-#set_io --warn-no-port PIN_26 J3
-#set_io --warn-no-port PIN_27 J4
-#set_io --warn-no-port PIN_28 G9
-#set_io --warn-no-port PIN_29 J9
-#set_io --warn-no-port PIN_30 E8
-#set_io --warn-no-port PIN_31 J2
+set_io --warn-no-port PDL_L B16
+set_io --warn-no-port PDL_R D14
+set_io --warn-no-port PDL_U D15
+set_io --warn-no-port PDL_D E14
 
 # LED
 # set_io --warn-no-port LED B3

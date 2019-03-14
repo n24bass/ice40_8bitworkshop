@@ -231,10 +231,6 @@ module test_numbers_top(
 			output VGA_HSYNC,
 			output VGA_VSYNC);
    
-   // input 		      clk, reset;
-   // output 		      hsync, vsync;
-   // output [2:0] 	      rgb;
-
    // RST - pull up
    wire 		       reset;
    SB_IO 
