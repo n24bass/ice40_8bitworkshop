@@ -23,13 +23,14 @@ Don't forget the 270ohm resistors in-line with the RGB pins. RESET (used in few 
 
 ## Project
 
-* test_pattern
-* segment_decorder
+* test_pattern - 10. A Test Pattern 
+* segment_decorder - 11. Digits
 * bitmapped_digits
-* ball_absolute
+* ball_absolute - 12. A Movin Ball
 * digits10
 * scoreboard
-* chardisplay 
+* chardisplay - 14. RAM, 15. Tile Graphics
+* sprite_bitmap - 17. Sprites
 * .. work in progress.
 
 ## Makefile

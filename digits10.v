@@ -252,7 +252,7 @@ module test_numbers_top(
    wire 		       clk;
 
    wire 		       display_on;
-   wire 		       vsync, hsync;
+  // wire 			       vsync, hsync;
    wire [10:0] 	       hpos;
    wire [10:0] 	       vpos;
    

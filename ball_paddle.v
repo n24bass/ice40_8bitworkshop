@@ -18,7 +18,7 @@ module ball_paddle_top(
 		       output VGA_HSYNC,
 		       output VGA_VSYNC,
 		       output LED1,
-		       input  PDL
+		       input  PDL_L
 		       );
 
   // RST - pull up
@@ -42,7 +42,7 @@ module ball_paddle_top(
       )
   hpaddle_t
     (
-     .PACKAGE_PIN(PDL),
+     .PACKAGE_PIN(PDL_L),
      .D_IN_0(hpaddle)
      );
 

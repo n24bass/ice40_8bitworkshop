@@ -245,12 +245,12 @@ module VGASyncGen
              x_px <= hc - blackH;
              y_px <= vc - blackV;
           end
-        else
-          // We are outside active video range so initial position it's ok.
-          begin
-             x_px <= 0;
-             y_px <= 0;
-          end
+        // else
+        //   // We are outside active video range so initial position it's ok.
+        //   begin
+        //     x_px <= 0;
+        //     y_px <= 0;
+        //   end
      end
 
 endmodule
