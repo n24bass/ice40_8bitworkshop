@@ -31,7 +31,7 @@ Don't forget the 270ohm resistors in-line with the RGB pins. RESET (used in few 
 * scoreboard
 * chardisplay - 14. RAM, 15. Tile Graphics
 * sprite_bitmap - 17. Sprites
-* .. work in progress.
+* sprite_rotation .. work in progress.
 
 ## Makefile
 
@@ -56,8 +56,11 @@ Select PROJ and TOP for the target project in Makefile.
 # PROJ = scoreboard
 # TOP = scoreboard_top
 #
-PROJ = chardisplay
-TOP = test_ram1_top
+# PROJ = chardisplay
+# TOP = test_ram1_top
+#
+PROJ = sprite_bitmap
+TOP = sprite_bitmap_top
 ```
 
 Make.

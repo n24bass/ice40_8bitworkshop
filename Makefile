@@ -21,11 +21,11 @@
 # PROJ = chardisplay
 # TOP = test_ram1_top
 #
-PROJ = sprite_bitmap
-TOP = sprite_bitmap_top
+# PROJ = sprite_bitmap
+# TOP = sprite_bitmap_top
 #
-# PROJ = sprite_rotation
-# TOP = sprite_rotation_top
+PROJ = sprite_rotation
+TOP = control_test_top
 #
 # PROJ = ball_paddle
 # TOP = ball_paddle_top

@@ -1,22 +1,21 @@
 
 `ifndef SPRITE_ROTATION_H
-`define SPRITE_ROTATION_H
+ `define SPRITE_ROTATION_H
 
-// `include "hvsync_generator.v"
-`include "VGASyncGen.vh"
+ `include "VGASyncGen.vh"
 
 /*
-tank_bitmap - ROM for tank bitmaps (5 different rotations)
-sprite_renderer2 - Displays a 16x16 sprite.
-tank_controller - Handles display and movement for one tank.
-*/
+ tank_bitmap - ROM for tank bitmaps (5 different rotations)
+ sprite_renderer2 - Displays a 16x16 sprite.
+ tank_controller - Handles display and movement for one tank.
+ */
 
 module tank_bitmap(addr, bits);
   
   input [7:0] addr;
   output [7:0] bits;
   
-  reg [15:0] bitarray[0:255];
+  reg [15:0]   bitarray[0:255];
   
   assign bits = (addr[0]) ? bitarray[addr>>1][15:8] : bitarray[addr>>1][7:0];
   
@@ -110,23 +109,23 @@ endmodule
 
 // 16x16 sprite renderer that supports rotation
 module sprite_renderer2(clk, vstart, load, hstart, rom_addr, rom_bits, 
-                       hmirror, vmirror,
-                       gfx, busy);
+                        hmirror, vmirror,
+                        gfx, busy);
   
   input clk, vstart, load, hstart;
   input hmirror, vmirror;
   output [4:0] rom_addr;
-  input [7:0] rom_bits;
-  output gfx;
-  output busy;
+  input [7:0]  rom_bits;
+  output       gfx;
+  output       busy;
   
   assign busy = state != WAIT_FOR_VSTART;
 
-  reg [2:0] state;
-  reg [3:0] ycount;
-  reg [3:0] xcount;
+  reg [2:0]    state;
+  reg [3:0]    ycount;
+  reg [3:0]    xcount;
   
-  reg [15:0] outbits;
+  reg [15:0]   outbits;
   
   localparam WAIT_FOR_VSTART = 0;
   localparam WAIT_FOR_LOAD   = 1;
@@ -144,12 +143,12 @@ module sprite_renderer2(clk, vstart, load, hstart, rom_addr, rom_bits,
           ycount <= 0;
           // set a default value (blank) for pixel output
           // note: multiple non-blocking assignments are vendor-specific
-	  gfx <= 0;
+          gfx <= 0;
           if (vstart) state <= WAIT_FOR_LOAD;
         end
         WAIT_FOR_LOAD: begin
           xcount <= 0;
-	  gfx <= 0;
+          gfx <= 0;
           if (load) state <= LOAD1_SETUP;
         end
         LOAD1_SETUP: begin
@@ -157,7 +156,7 @@ module sprite_renderer2(clk, vstart, load, hstart, rom_addr, rom_bits,
           state <= LOAD1_FETCH;
         end
         LOAD1_FETCH: begin
-	  outbits[7:0] <= rom_bits;
+          outbits[7:0] <= rom_bits;
           state <= LOAD2_SETUP;
         end
         LOAD2_SETUP: begin
@@ -180,7 +179,7 @@ module sprite_renderer2(clk, vstart, load, hstart, rom_addr, rom_bits,
             if (ycount == 15) // pre-increment value
               state <= WAIT_FOR_VSTART; // done drawing sprite
             else
-	      state <= WAIT_FOR_LOAD; // done drawing this scanline
+              state <= WAIT_FOR_LOAD; // done drawing this scanline
           end
         end
       endcase
@@ -191,28 +190,28 @@ endmodule
 // converts 0..15 rotation value to bitmap index / mirror bits
 module rotation_selector(rotation, bitmap_num, hmirror, vmirror);
   
-  input [3:0] rotation;	   // angle (0..15)
+  input [3:0] rotation;    // angle (0..15)
   output [2:0] bitmap_num; // bitmap index (0..4)
-  output hmirror, vmirror; // horiz & vert mirror bits
+  output       hmirror, vmirror; // horiz & vert mirror bits
   
   always @(*)
-    case (rotation[3:2])	// 4 quadrants
-      0: begin			// 0..3 -> 0..3
+    case (rotation[3:2])        // 4 quadrants
+      0: begin                  // 0..3 -> 0..3
         bitmap_num = {1'b0, rotation[1:0]};
         hmirror = 0;
         vmirror = 0;
       end
-      1: begin			// 4..7 -> 4..1
+      1: begin                  // 4..7 -> 4..1
         bitmap_num = -rotation[2:0];
         hmirror = 0;
         vmirror = 1;
       end
-      2: begin			// 8-11 -> 0..3
+      2: begin                  // 8-11 -> 0..3
         bitmap_num = {1'b0, rotation[1:0]};
         hmirror = 1;
         vmirror = 1;
       end
-      3: begin			// 12-15 -> 4..1
+      3: begin                  // 12-15 -> 4..1
         bitmap_num = -rotation[2:0];
         hmirror = 1;
         vmirror = 0;
@@ -231,158 +230,169 @@ module tank_controller(clk, reset, hpos, vpos, hsync, vsync,
   input reset;
   input hsync;
   input vsync;
-  input [8:0] hpos;
-  input [8:0] vpos;
+  input [10:0] hpos;
+  input [10:0] vpos;
   output [7:0] sprite_addr;
-  input [7:0] sprite_bits;
-  output gfx;
-  input playfield;
-  input switch_left, switch_right, switch_up;
+  input [7:0]  sprite_bits;
+  output       gfx;
+  input        playfield;
+  input        switch_left, switch_right, switch_up;
   
   parameter initial_x = 128;
   parameter initial_y = 120;
   parameter initial_rot = 0;
   
-  wire hmirror, vmirror;
-  wire busy;
-  wire collision_gfx = gfx && playfield;
+  wire         hmirror, vmirror;
+  wire         busy;
+  wire         collision_gfx = gfx && playfield;
 
-  reg [11:0] player_x_fixed;
-  wire [7:0] player_x = player_x_fixed[11:4];
-  wire [3:0] player_x_frac = player_x_fixed[3:0];
+  reg [11:0]   player_x_fixed;
+  wire [7:0]   player_x = player_x_fixed[11:4];
+  wire [3:0]   player_x_frac = player_x_fixed[3:0];
   
-  reg [11:0] player_y_fixed;
-  wire [7:0] player_y = player_y_fixed[11:4];
-  wire [3:0] player_y_frac = player_y_fixed[3:0];
+  reg [11:0]   player_y_fixed;
+  wire [7:0]   player_y = player_y_fixed[11:4];
+  wire [3:0]   player_y_frac = player_y_fixed[3:0];
   
-  reg [3:0] player_rot;
-  reg [3:0] player_speed;
-  reg [3:0] frame = 0;
+  reg [3:0]    player_rot;
+  reg [3:0]    player_speed;
+  reg [3:0]    frame = 0;
   
-  wire vstart = {1'b0,player_y} == vpos;
-  wire hstart = {1'b0,player_x} == hpos;
+  wire         vstart = {1'b0,player_y} == vpos;
+  wire         hstart = {1'b0,player_x} == hpos;
 
   sprite_renderer2 renderer(
-    .clk(clk),
-    .vstart(vstart),
-    .load(hsync),
-    .hstart(hstart),
-    .hmirror(hmirror),
-    .vmirror(vmirror),
-    .rom_addr(sprite_addr[4:0]),
-    .rom_bits(sprite_bits),
-    .gfx(gfx),
-    .busy(busy));
+                            .clk(clk),
+                            .vstart(vstart),
+                            .load(hsync),
+                            .hstart(hstart),
+                            .hmirror(hmirror),
+                            .vmirror(vmirror),
+                            .rom_addr(sprite_addr[4:0]),
+                            .rom_bits(sprite_bits),
+                            .gfx(gfx),
+                            .busy(busy));
   
   rotation_selector rotsel(
-    .rotation(player_rot),
-    .bitmap_num(sprite_addr[7:5]),
-    .hmirror(hmirror),
-    .vmirror(vmirror));
+                           .rotation(player_rot),
+                           .bitmap_num(sprite_addr[7:5]),
+                           .hmirror(hmirror),
+                           .vmirror(vmirror));
 
-  always @(posedge vsync or posedge reset)
-  begin
-    if (reset) begin
-      player_rot <= initial_rot;
-      player_speed <= 0;
-    end else begin
-      frame <= frame + 1; // increment frame counter
-      if (frame[0]) begin // only update every other frame
-        if (!switch_left)
-          player_rot <= player_rot - 1; // turn left
-        else if (!switch_right)
-          player_rot <= player_rot + 1; // turn right
-        if (!switch_up) begin
-          if (player_speed != 15) // max accel
-            player_speed <= player_speed + 1;
-        end else
-          player_speed <= 0; // stop
+  always @(posedge vsync or negedge reset)
+    begin
+      if (!reset) begin
+        player_rot <= initial_rot;
+        player_speed <= 0;
+      end else begin
+        frame <= frame + 1; // increment frame counter
+        if (frame[0]) begin // only update every other frame
+          if (!switch_left)
+            player_rot <= player_rot - 1; // turn left
+          else if (!switch_right)
+            player_rot <= player_rot + 1; // turn right
+          if (!switch_up) begin
+            if (player_speed != 15) // max accel
+              player_speed <= player_speed + 1;
+          end else
+            player_speed <= 0; // stop
+        end
       end
     end
-  end
   
   // set if collision; cleared at vsync
   reg collision_detected; 
   
-  always @(posedge clk)
+  always @(posedge clk) begin
     if (vstart)
       collision_detected <= 0;
     else if (collision_gfx)
       collision_detected <= 1;
+  end
   
   // sine lookup (4 bits input, 4 signed bits output)  
-  function signed [3:0] sin_16x4;
-    input [3:0] in;	// input angle 0..15
-    integer y;
-    case (in[1:0])	// 4 values per quadrant
+  function signed [3:0] fsin(input [3:0] in);
+    reg signed [3:0] y;
+
+    case (in[1:0])      // 4 values per quadrant
       0: y = 0;
       1: y = 3;
       2: y = 5;
       3: y = 6;
-    endcase
-    case (in[3:2])	// 4 quadrants
-      0: sin_16x4 = 4'(y);
-      1: sin_16x4 = 4'(7-y);
-      2: sin_16x4 = 4'(-y);
-      3: sin_16x4 = 4'(y-7);
-    endcase
+    endcase; // case (in[1:0])
+
+    case (in[3:2])      // 4 quadrantsin
+      0: fsin = y;
+      1: fsin = 7-y;
+      2: fsin = -y;
+      3: fsin = y-7;
+    endcase; // case (in[3:2])
+
   endfunction
-  
-  always @(posedge hsync or posedge reset)
-    if (reset) begin
+
+  reg prev_hsync;
+  always @(posedge hsync or negedge reset) begin
+    if (!reset) begin
       // set initial position
       player_x_fixed <= initial_x << 4;
       player_y_fixed <= initial_y << 4;
     end else begin
-      // collision detected? move backwards
-      if (collision_detected && vpos[3:1] == 0) begin
-        if (vpos[0])
-          player_x_fixed <= player_x_fixed + 12'(sin_16x4(player_rot+8));
-        else
-          player_y_fixed <= player_y_fixed - 12'(sin_16x4(player_rot+12));
-      end else
-      // forward movement
-      if (vpos < 9'(player_speed)) begin
-        if (vpos[0])
-          player_x_fixed <= player_x_fixed + 12'(sin_16x4(player_rot));
-        else
-          player_y_fixed <= player_y_fixed - 12'(sin_16x4(player_rot+4));
-      end
-    end
+      prev_hsync <= hsync;
+      if (prev_hsync && !hsync) begin
+        // collision detected? move backwards
+        if (collision_detected && vpos[3:1] == 0) begin
+          if (vpos[0]) begin
+            player_x_fixed <= player_x_fixed + fsin(player_rot+8);
+          end else begin
+            player_y_fixed <= player_y_fixed - fsin(player_rot+12);
+          end
+        end else begin
+          // forward movement
+          if (vpos < player_speed) begin
+            if (vpos[0]) begin
+              player_x_fixed <= player_x_fixed + fsin(player_rot);
+            end else begin
+              player_y_fixed <= player_y_fixed - fsin(player_rot+4);
+            end
+          end
+        end
+      end // if (prev_hsync && !hsync)
+    end // else: !if(reset)
+  end
 
 endmodule
 
 //TODO: debouncing
 
 module control_test_top(
-// clk, reset, hsync, vsync, rgb, switches_p1);
-			input  RST, // active low
-			input  CLK, // 12MHz clock
-			input PDL_L,
-			input PDL_R,
-			input PDL_U,
-			// VGA
-			output VGA_BLUE,
-			output VGA_GREEN,
-			output VGA_RED,
-			output VGA_HSYNC,
-			output VGA_VSYNC);
+                        // clk, reset, hsync, vsync, rgb, switches_p1);
+                        input  RST, // active low
+                        input  CLK, // 12MHz clock
+                        input  PDL_L,
+                        input  PDL_R,
+                        input  PDL_U,
+                        // VGA
+                        output VGA_BLUE,
+                        output VGA_GREEN,
+                        output VGA_RED,
+                        output VGA_HSYNC,
+                        output VGA_VSYNC);
 
-   // RST - pull up
-   wire 		       reset;
-   SB_IO 
-     #(
-       .PIN_TYPE(6'b0000_01),
-       .PULLUP(1'b1)
-       )
-   reset_t
-     (
-      .PACKAGE_PIN(RST),
-      .D_IN_0(reset)
-      );
+  // RST - pull up
+  wire  reset;
+  SB_IO 
+    #(
+      .PIN_TYPE(6'b0000_01),
+      .PULLUP(1'b1)
+      )
+  reset_t
+    (
+     .PACKAGE_PIN(RST),
+     .D_IN_0(reset)
+     );
 
-   // PDL - pull up
-   wire 		       pdl_l, pdl_r, pdl_u;
+  // PDL - pull up
+  wire  pdl_l, pdl_r, pdl_u;
   SB_IO 
     #(
       .PIN_TYPE(6'b0000_01),
@@ -390,9 +400,9 @@ module control_test_top(
       )
   pdl_l_t
     (
-      .PACKAGE_PIN(PDL_L),
-      .D_IN_0(pdl_l)
-      );
+     .PACKAGE_PIN(PDL_L),
+     .D_IN_0(pdl_l)
+     );
   SB_IO 
     #(
       .PIN_TYPE(6'b0000_01),
@@ -400,9 +410,9 @@ module control_test_top(
       )
   pdl_r_t
     (
-      .PACKAGE_PIN(PDL_R),
-      .D_IN_0(pdl_r)
-      );
+     .PACKAGE_PIN(PDL_R),
+     .D_IN_0(pdl_r)
+     );
   SB_IO 
     #(
       .PIN_TYPE(6'b0000_01),
@@ -410,98 +420,77 @@ module control_test_top(
       )
   pdl_u_t
     (
-      .PACKAGE_PIN(PDL_U),
-      .D_IN_0(pdl_u)
-      );
+     .PACKAGE_PIN(PDL_U),
+     .D_IN_0(pdl_u)
+     );
 
-   wire 		       vsync = VGA_VSYNC;
-   wire 		       hsync = VGA_HSYNC;
-   wire 		       red   = VGA_RED;
-   wire 		       green = VGA_GREEN;
-   wire 		       blue  = VGA_BLUE;
-   wire 		       clk;
+  wire   vsync, hsync, red, green, blue;
+  assign VGA_VSYNC = vsync;
+  assign VGA_HSYNC = hsync;
+  assign VGA_RED = red;
+  assign VGA_GREEN = green;
+  assign VGA_BLUE = blue;
+  wire   clk;
 
-   wire 		       display_on;
-   wire 		       vsync, hsync;
-   wire [10:0] 	       hpos;
-   wire [10:0] 	       vpos;
-   
-   VGASyncGen
-     // 640x480@73Hz
-     #(.FDivider(83), 
-       .QDivider(5),
-       .activeHvideo(640),
-       .activeVvideo(480),
-       .hfp(24),
-       .hpulse(40),
-       .hbp(128),
-       .vfp(9),
-       .vpulse(2),
-       .vbp(29))
-   hvsync_gen(
-	      .clk(CLK),
-	      // .reset(reset),
-	      .hsync(hsync),
-	      .vsync(vsync),
-	      .x_px(hpos),
-	      .y_px(vpos),
-	      .activevideo(display_on),
-	      .px_clk(clk));
+  wire        display_on;
+  wire [10:0] hpos;
+  wire [10:0] vpos;
   
-  // input clk;
-  // input reset;
-  // output hsync;
-  // output vsync;
-  // output [2:0] rgb;
-  // input [7:0] switches_p1;
+  VGASyncGen
+    // 640x480@73Hz
+    #(.FDivider(83), 
+      .QDivider(5),
+      .activeHvideo(640),
+      .activeVvideo(480),
+      .hfp(24),
+      .hpulse(40),
+      .hbp(128),
+      .vfp(9),
+      .vpulse(2),
+      .vbp(29))
+  hvsync_gen(
+             .clk(CLK),
+             // .reset(reset),
+             .hsync(hsync),
+             .vsync(vsync),
+             .x_px(hpos),
+             .y_px(vpos),
+             .activevideo(display_on),
+             .px_clk(clk));
   
-  wire display_on;
-  wire [8:0] hpos;
-  wire [8:0] vpos;
-
-  reg [7:0] paddle_x;
-  reg [7:0] paddle_y;
+  reg [7:0]     paddle_x;
+  reg [7:0]     paddle_y;
   
-  hvsync_generator hvsync_gen(
-    .clk(clk),
-    .reset(reset),
-    .hsync(hsync),
-    .vsync(vsync),
-    .display_on(display_on),
-    .hpos(hpos),
-    .vpos(vpos)
-  );
-  
-  wire [7:0] tank_sprite_addr;
-  wire [7:0] tank_sprite_bits;
+  wire [7:0]    tank_sprite_addr;
+  wire [7:0]    tank_sprite_bits;
   
   tank_bitmap tank_bmp(
-    .addr(tank_sprite_addr), 
-    .bits(tank_sprite_bits));
+                       .addr(tank_sprite_addr), 
+                       .bits(tank_sprite_bits));
   
   tank_controller tank1(
-    .clk(clk),
-    .reset(reset),
-    .hpos(hpos),
-    .vpos(vpos),
-    .hsync(hsync),
-    .vsync(vsync),
-    .sprite_addr(tank_sprite_addr), 
-    .sprite_bits(tank_sprite_bits),
-    .gfx(tank1_gfx),
-    .playfield(playfield_gfx),
-    .switch_left(pdl_l),
-    .switch_right(pdl_r),
-    .switch_up(pdl_u)
-  );
+                        .clk(clk),
+                        .reset(reset),
+                        .hpos(hpos),
+                        .vpos(vpos),
+                        .hsync(hsync),
+                        .vsync(vsync),
+                        .sprite_addr(tank_sprite_addr), 
+                        .sprite_bits(tank_sprite_bits),
+                        .gfx(tank1_gfx),
+                        .playfield(playfield_gfx),
+                        .switch_left(pdl_l),
+                        .switch_right(pdl_r),
+                        .switch_up(pdl_u)
+                        );
   
-  wire tank1_gfx;
-  wire playfield_gfx = hpos[5] && vpos[5];
+  wire  tank1_gfx;
+  wire  playfield_gfx = hpos[5] && vpos[5];
   
-  wire r = display_on && tank1_gfx;
-  wire g = display_on && tank1_gfx;
-  wire b = display_on && (tank1_gfx || playfield_gfx);
-  assign rgb = {b,g,r};
+  wire  red = display_on && tank1_gfx;
+  wire  green = display_on && tank1_gfx;
+  wire  blue = display_on && (tank1_gfx || playfield_gfx);
+  // assign rgb = {b,g,r};
 
 endmodule
 
