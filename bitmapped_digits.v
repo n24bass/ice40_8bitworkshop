@@ -7,8 +7,9 @@
  *
  */
 
-`define __COMMON_CODE_ROOT_FOLDER "../.."
-`include "../../hdl/core.vh"
+// `define __COMMON_CODE_ROOT_FOLDER "../.."
+// `include "../../hdl/core.vh"
+`include "VGASyncGen.vh"
 
 // module for 10-digit bitmap ROM
 module digits10_case(digit, yofs, bits);

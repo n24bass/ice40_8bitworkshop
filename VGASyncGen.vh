@@ -19,6 +19,10 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
+
+`ifndef VGASYNCGEN_VH
+`define VGASYNCGEN_VH
+
 module VGASyncGen
   #(
     // 640x480@60Hz (pixel clock 25.175MHz) - OK
@@ -96,8 +100,8 @@ module VGASyncGen
     input wire 	      clk, // Input clock (12Mhz or 16Mhz)
     output wire       hsync, // Horizontal sync out
     output wire       vsync, // Vertical sync out
-    output reg signed [11:0] x_px, // X position for actual pixel.
-    output reg signed [11:0] y_px, // Y position for actual pixel.
+    output reg [10:0] x_px, // X position for actual pixel.
+    output reg [10:0] y_px, // Y position for actual pixel.
     output wire       activevideo, // Video is actived.
     //            output wire      endframe,      // End for actual frame.
     output wire       px_clk         // Pixel clock.
@@ -241,12 +245,14 @@ module VGASyncGen
              x_px <= hc - blackH;
              y_px <= vc - blackV;
           end
-        else
-          // We are outside active video range so initial position it's ok.
-          begin
-             x_px <= 0;
-             y_px <= 0;
-          end
+        // else
+        //   // We are outside active video range so initial position it's ok.
+        //   begin
+        //     x_px <= 0;
+        //     y_px <= 0;
+        //   end
      end
 
 endmodule
+
+`endif
