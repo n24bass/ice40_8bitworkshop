@@ -26,18 +26,18 @@
 module VGASyncGen
   #(
     // 640x480@60Hz (pixel clock 25.175MHz) - OK
-    // parameter FDivider = 66, // 62         // Feedback divider 62 for 16Mhz (default) 83 for 12Mhz.
-    // parameter QDivider = 5,  // 5 for 640x480
-    // parameter activeHvideo = 640,               // Width of visible pixels.
-    // parameter activeVvideo =  480,              // Height of visible lines.
-    // parameter hfp = 16,                         // Horizontal front porch length.
-    // parameter hpulse = 96,                      // Hsync pulse length.
-    // parameter hbp = 48,                        // Horizontal back porch length.
-    // parameter vfp = 10,                          // Vertical front porch length.
-    // parameter vpulse = 2,                       // Vsync pulse length.n
-    // parameter vbp = 33                         // Vertical back porch length.
+    parameter FDivider = 66, // 62         // Feedback divider 62 for 16Mhz (default) 83 for 12Mhz.
+    parameter QDivider = 5,  // 5 for 640x480
+    parameter activeHvideo = 640,               // Width of visible pixels.
+    parameter activeVvideo =  480,              // Height of visible lines.
+    parameter hfp = 16,                         // Horizontal front porch length.
+    parameter hpulse = 96,                      // Hsync pulse length.
+    parameter hbp = 48,                        // Horizontal back porch length.
+    parameter vfp = 10,                          // Vertical front porch length.
+    parameter vpulse = 2,                       // Vsync pulse length.n
+    parameter vbp = 33                         // Vertical back porch length.
     //
-    // 640x480@73Hz (pixel clock 31.5MHz) - OK
+    // // 640x480@73Hz (pixel clock 31.5MHz) - NG
     // parameter FDivider = 83, // 62         // Feedback divider 62 for 16Mhz (default) 83 for 12Mhz.
     // parameter QDivider = 5,  // 5 for 640x480
     // parameter activeHvideo = 640,               // Width of visible pixels.
@@ -84,20 +84,21 @@ module VGASyncGen
     // parameter vfp = 3,                          // Vertical front porch length.
     // parameter vpulse = 10,                       // Vsync pulse length.n
     // parameter vbp = 12                         // Vertical back porch length.
-    // 1024x768@60Hz (65MHz pixel clock)
-    parameter FDivider = 49, // 62         // Feedback divider 62 for 16Mhz (default) 83 for 12Mhz.
-    parameter QDivider = 3,  // 5 for 640x480
-    parameter activeHvideo = 1024,               // Width of visible pixels.
-    parameter activeVvideo =  768,              // Height of visible lines.
-    parameter hfp = 24,                         // Horizontal front porch length.
-    parameter hpulse = 136,                      // Hsync pulse length.
-    parameter hbp = 144,                        // Horizontal back porch length.
-    parameter vfp = 3,                          // Vertical front porch length.
-    parameter vpulse = 6,                       // Vsync pulse length.n
-    parameter vbp = 29                         // Vertical back porch length.
+    //
+    // // 1024x768@60Hz (65MHz pixel clock)
+    // parameter FDivider = 49, // 62         // Feedback divider 62 for 16Mhz (default) 83 for 12Mhz.
+    // parameter QDivider = 3,  // 5 for 640x480
+    // parameter activeHvideo = 1024,               // Width of visible pixels.
+    // parameter activeVvideo =  768,              // Height of visible lines.
+    // parameter hfp = 24,                         // Horizontal front porch length.
+    // parameter hpulse = 136,                      // Hsync pulse length.
+    // parameter hbp = 144,                        // Horizontal back porch length.
+    // parameter vfp = 3,                          // Vertical front porch length.
+    // parameter vpulse = 6,                       // Vsync pulse length.n
+    // parameter vbp = 29                         // Vertical back porch length.
     )
    (
-    input wire 	      clk, // Input clock (12Mhz or 16Mhz)
+    input wire        clk, // Input clock (12Mhz or 16Mhz)
     output wire       hsync, // Horizontal sync out
     output wire       vsync, // Vertical sync out
     output reg [10:0] x_px, // X position for actual pixel.
@@ -143,8 +144,8 @@ module VGASyncGen
    // FILTER_RANGE: 1 (3'b001)
    //
 
-   parameter blackH = hfp + hpulse + hbp;      // Hide pixels in one line.
-   parameter blackV = vfp + vpulse + vbp;      // Hide lines in one frame.
+   parameter blackH = hfp + hpulse + hbp;      // Hide pixels in one line. 16 + 96 + 48
+   parameter blackV = vfp + vpulse + vbp;      // Hide lines in one frame. 10 +  2 + 33
    parameter hpixels = blackH + activeHvideo;  // Total horizontal pixels.
    parameter vlines = blackV + activeVvideo;   // Total lines.
 
@@ -154,7 +155,7 @@ module VGASyncGen
                    .DIVF(FDivider),
                    .DIVQ(QDivider), // 3'b101),
                    .FILTER_RANGE(3'b001)
-		   )
+                   )
    uut
      (
       .REFERENCECLK(clk),
@@ -194,20 +195,20 @@ module VGASyncGen
    //       |B|
    //       |---------------A----------------|
    //   
-   // (Same structure for vertical signals).
+   // (Same structure for vertical hpixelssignals).
    //
 
    // Registers for storing the horizontal & vertical counters.
-   reg [10:0] 			    hc;
-   reg [10:0] 			    vc;
+   reg [10:0]                       hc;
+   reg [10:0]                       vc;
 
    // Initial values.
    initial
      begin
-	x_px <= 0;
-	y_px <= 0;
-	hc <= 0;
-	vc <= 0;
+        x_px <= 0;
+        y_px <= 0;
+        hc <= 0;
+        vc <= 0;
      end
 
    // Counting pixels.
@@ -233,7 +234,7 @@ module VGASyncGen
    // Generate horizontal and vertical sync pulses (active low) and active video.
    assign hsync = (hc >= hfp && hc < hfp + hpulse) ? 1'b0 : 1'b1;
    assign vsync = (vc >= vfp && vc < vfp + vpulse) ? 1'b0 : 1'b1;
-   assign activevideo = (hc >= blackH) && (vc >= blackV) ? 1'b1 : 1'b0; //&& (hc < blackH + activeHvideo) && (vc < blackV + activeVvideo) ? 1'b1 : 1'b0;
+   assign activevideo = ((hc >= blackH) && (vc >= blackV)) ? 1'b1 : 1'b0; //&& (hc < blackH + activeHvideo) && (vc < blackV + activeVvideo) ? 1'b1 : 1'b0;
    //    assign endframe = (hc == hpixels-1 && vc == vlines-1) ? 1'b1 : 1'b0 ;
 
    // Generate new pixel position.
@@ -242,15 +243,15 @@ module VGASyncGen
         // First check if we are within vertical active video range.
         if (activevideo)
           begin
-             x_px <= hc - blackH;
-             y_px <= vc - blackV;
+            x_px <= hc - blackH; //  - 5;
+            y_px <= vc - blackV;
           end
-        // else
-        //   // We are outside active video range so initial position it's ok.
-        //   begin
-        //     x_px <= 0;
-        //     y_px <= 0;
-        //   end
+        else
+          // We are outside active video range so initial position it's ok.
+          begin
+            x_px <= 0;
+            y_px <= 0;
+          end
      end
 
 endmodule
