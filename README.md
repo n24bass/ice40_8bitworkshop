@@ -18,8 +18,11 @@ The default pins used by the example are:
 | F16 | 2 | GREEN | |
 | G16 | 3 | BLUE | |
 | H16 |  | | RESET |
+| B16 |  | | PDL_L (paddle left) |
+| D14 |  | | PDL_R (paddle right) |
+| D15 |  | | PDL_U (paddle up) |
 
-Don't forget the 270ohm resistors in-line with the RGB pins. RESET (used in few projects) is active low.
+Don't forget the 270ohm resistors in-line with the RGB pins. RESET, PDL_* (used in few projects) is active low.
 
 ## Project
 
@@ -29,6 +32,7 @@ Don't forget the 270ohm resistors in-line with the RGB pins. RESET (used in few 
 * ball_absolute - 12. A Movin Ball
 * digits10
 * scoreboard
+* ball_paddle .. work in progress.
 * chardisplay - 14. RAM, 15. Tile Graphics
 * sprite_bitmap - 17. Sprites
 * sprite_rotation .. work in progress.
