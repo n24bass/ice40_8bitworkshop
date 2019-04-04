@@ -153,8 +153,8 @@ module ball_paddle_top(
   wire [8:0] ball_rel_y = (vpos - ball_y);
 
   // ball graphics signal
-  wire ball_gfx = ball_rel_x < BALL_SIZE && ball_rel_y < BALL_SIZE
-                  && ball_rel_x >= 0 && ball_rel_y >= 0;
+  wire ball_gfx = ball_rel_x < BALL_SIZE && ball_rel_y < BALL_SIZE;
+  // && ball_rel_x >= 0 && ball_rel_y >= 0;
 
   reg main_gfx;         // main graphics signal (bricks and borders)
   reg brick_present;    // 1 when we are drawing a brick
@@ -207,9 +207,9 @@ module ball_paddle_top(
         end
         // ball has 4 collision quadrants
         if (!ball_rel_x[2] & !ball_rel_y[2]) ball_collide_bits[0] <= 1;
-        if (ball_rel_x[2] & !ball_rel_y[2]) ball_collide_bits[1] <= 1;
-        if (!ball_rel_x[2] & ball_rel_y[2]) ball_collide_bits[2] <= 1;
-        if (ball_rel_x[2] & ball_rel_y[2]) ball_collide_bits[3] <= 1;
+        if ( ball_rel_x[2] & !ball_rel_y[2]) ball_collide_bits[1] <= 1;
+        if (!ball_rel_x[2] &  ball_rel_y[2]) ball_collide_bits[2] <= 1;
+        if ( ball_rel_x[2] &  ball_rel_y[2]) ball_collide_bits[3] <= 1;
       end
     end
 
