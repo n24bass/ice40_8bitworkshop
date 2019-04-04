@@ -24,11 +24,11 @@
 # PROJ = sprite_bitmap
 # TOP = sprite_bitmap_top
 #
-PROJ = sprite_rotation
-TOP = control_test_top
+# PROJ = sprite_rotation
+# TOP = control_test_top
 #
-# PROJ = ball_paddle
-# TOP = ball_paddle_top
+PROJ = ball_paddle
+TOP = ball_paddle_top
 
 BUILD     = ./build
 DEVICE    = 8k

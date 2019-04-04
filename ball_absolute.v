@@ -10,16 +10,16 @@
 `define VGAMODE1
 
 module top (
-	    input RST, // active low
-	    input CLK, // 12MHz clock
-	    // VGA
-	    output VGA_BLUE,
-	    output VGA_GREEN,
-	    output VGA_RED,
-	    output VGA_HSYNC,
-	    output VGA_VSYNC,
-	    output LED1
-	    );
+            input RST, // active low
+            input CLK, // 12MHz clock
+            // VGA
+            output VGA_BLUE,
+            output VGA_GREEN,
+            output VGA_RED,
+            output VGA_HSYNC,
+            output VGA_VSYNC,
+            output LED1
+            );
 
    // RST - pull up
    wire reset;
@@ -99,12 +99,12 @@ module top (
        .vbp(29))
 `endif
      vga_generator(.clk(CLK),
-		   .hsync(hsync),
-		   .vsync(vsync),
-		   .x_px(hpos),
-		   .y_px(vpos),
-		   .activevideo(display_on),
-		   .px_clk(pclk));
+                   .hsync(hsync),
+                   .vsync(vsync),
+                   .x_px(hpos),
+                   .y_px(vpos),
+                   .activevideo(display_on),
+                   .px_clk(pclk));
 
    // -- 
 
@@ -114,46 +114,46 @@ module top (
    localparam ball_vert_initial = VGA_VSIZE / 2;
 
    // ball position
-   reg [10:0] 	   ball_hpos = ball_horiz_initial;
-   reg [10:0] 	   ball_vpos = ball_vert_initial;
+   reg [10:0] ball_hpos = ball_horiz_initial;
+   reg [10:0] ball_vpos = ball_vert_initial;
 
    // ball velocity vector
-   reg [10:0] 	   ball_horiz_move = BALL_SPEED;
-   reg [10:0] 	   ball_vert_move  = BALL_SPEED;
+   reg [10:0] ball_horiz_move = BALL_SPEED;
+   reg [10:0] ball_vert_move  = BALL_SPEED;
 
-   wire	   ball_hgfx = ((hpos - ball_hpos) < BALL_SIZE) && ((hpos - ball_hpos) >= 0);
-   wire    ball_vgfx = ((vpos - ball_vpos) < BALL_SIZE) && ((vpos - ball_vpos) >= 0);
-   // wire	   ball_gfx = ball_hgfx && ball_vgfx;
-   wire	   grid_gfx = (((hpos&7)==0) && ((vpos&7)==0));
+   wire ball_hgfx = ((hpos - ball_hpos) < BALL_SIZE) && ((hpos - ball_hpos) >= 0);
+   wire ball_vgfx = ((vpos - ball_vpos) < BALL_SIZE) && ((vpos - ball_vpos) >= 0);
+   // wire ball_gfx = ball_hgfx && ball_vgfx;
+   wire grid_gfx = (((hpos&7)==0) && ((vpos&7)==0));
 
-   reg 		   prev_vsync;
+   reg prev_vsync;
    always @(posedge pclk) begin
       prev_vsync <= vsync;
       if (prev_vsync && !vsync) begin
-	 // ball collide
-	 if (ball_hpos >= (VGA_HSIZE - BALL_SIZE)) ball_horiz_move = -BALL_SPEED;
-	 else if (ball_hpos <= 0) ball_horiz_move = BALL_SPEED;
-	 if (ball_vpos >= (VGA_VSIZE - BALL_SIZE)) ball_vert_move = -BALL_SPEED;
-	 else if (ball_vpos <= 0) ball_vert_move = BALL_SPEED;
+         // ball collide
+         if (ball_hpos >= (VGA_HSIZE - BALL_SIZE)) ball_horiz_move = -BALL_SPEED;
+         else if (ball_hpos <= 0) ball_horiz_move = BALL_SPEED;
+         if (ball_vpos >= (VGA_VSIZE - BALL_SIZE)) ball_vert_move = -BALL_SPEED;
+         else if (ball_vpos <= 0) ball_vert_move = BALL_SPEED;
 
-	 if (reset) begin
-	    // add velocity vector to ball position
-	    ball_hpos <= ball_hpos + ball_horiz_move;
-	    ball_vpos <= ball_vpos + ball_vert_move;
-	 end else begin
-	    // reset ball position
-	    ball_hpos <= ball_horiz_initial;
-	    ball_vpos <= ball_vert_initial;
-	 end
+         if (reset) begin
+            // add velocity vector to ball position
+            ball_hpos <= ball_hpos + ball_horiz_move;
+            ball_vpos <= ball_vpos + ball_vert_move;
+         end else begin
+            // reset ball position
+            ball_hpos <= ball_horiz_initial;
+            ball_vpos <= ball_vert_initial;
+         end
       end
       if (display_on) begin
-      	 red   <= ball_hgfx;
-      	 green <= (grid_gfx | (ball_hgfx & ball_vgfx));
-      	 blue  <= ball_vgfx;
+         red   <= ball_hgfx;
+         green <= (grid_gfx | (ball_hgfx & ball_vgfx));
+         blue  <= ball_vgfx;
       end else begin
-      	 red   <= 0;
-      	 green <= 0;
-      	 blue  <= 0;
+         red   <= 0;
+         green <= 0;
+         blue  <= 0;
       end
    end
 
