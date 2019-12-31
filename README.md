@@ -1,5 +1,7 @@
+work in progress.
+
 # Overview
- "Designing Video Game Hardware in Verilog" from http://8bitworkshop.com/ implemented for iCE40HX8K Breakout Board 
+ "Designing Video Game Hardware in Verilog" from http://8bitworkshop.com/ implemented for iCE40HX8K Breakout Board. 
 
 ## Prerequisites
 
